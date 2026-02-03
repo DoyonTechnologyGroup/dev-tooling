@@ -1,0 +1,11 @@
+# Local settings (not committed)
+.claude/settings.local.json
+
+# macOS
+.DS_Store
+
+# Custom sounds
+sounds/*.aiff
+sounds/*.mp3
+sounds/*.wav
+!sounds/.gitkeep
