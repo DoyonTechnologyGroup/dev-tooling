@@ -1,10 +1,34 @@
-# Dev Tooling for Claude Code
+# Dev Tooling for Claude Code & Cursor
 
-A comprehensive set of automations, hooks, and templates for Claude Code.
+A comprehensive set of automations, hooks, and the Ralph workflow for AI-assisted development.
 
-## Features
+## Quick Install
 
-### Hooks (`~/.claude/hooks/`)
+```bash
+git clone https://github.com/DoyonTechnologyGroup/dev-tooling.git
+cd dev-tooling && ./install/install.sh
+```
+
+Or if you already have the repo:
+
+```bash
+./install/install.sh
+```
+
+## What You Get
+
+### Slash Commands
+
+| Command | Purpose |
+|---------|---------|
+| `/ralph` | Smart workflow - bootstraps projects, plans features, executes tasks, records lessons |
+| `/deps` | Check for outdated dependencies and security issues |
+| `/test` | Run project tests |
+| `/lint` | Run linters |
+| `/fmt` | Format all files |
+| `/pr` | Create pull request with summary |
+
+### Hooks (Claude Code)
 
 | Hook | Event | Description |
 |------|-------|-------------|
@@ -19,94 +43,88 @@ A comprehensive set of automations, hooks, and templates for Claude Code.
 | `log-session.sh` | Stop | Logs session info to sessions.log |
 | `track-cost.sh` | Stop | Tracks token usage to usage.csv |
 | `protect-branch.sh` | PreToolUse | Blocks edits on main/master branch |
+| `teams-toggle.sh` | Utility | Toggle Teams notifications on/off |
 
-### Custom Commands (`~/.claude/commands/`)
+## The Ralph Workflow
 
-- `/test` - Run project tests
-- `/lint` - Run linters
-- `/fmt` - Format all files
-- `/deploy` - Deploy project (detects platform)
-- `/pr` - Create pull request with summary
+Ralph is a structured workflow for AI-assisted development that works across tools.
 
-### Project Templates (`templates/`)
+### How It Works
 
-- `python/` - Python project with Black, Ruff, pytest
-- `nextjs/` - Next.js with Prettier, ESLint
-- `streamlit/` - Streamlit app template
+Just type `/ralph` - it figures out what to do based on context:
 
-## Usage
+| Context | What Happens |
+|---------|--------------|
+| New project (no scaffold) | Bootstraps CLAUDE.md, docs/, lessons/, checks.yml |
+| Scaffold exists, no tasks | Enters planning mode |
+| Tasks defined | Executes next task |
+| Task in progress | Resumes interrupted work |
+| Something failed | Records a lesson |
 
-### Create a New Project from Template
+### Cross-Tool Compatibility
 
+When `/ralph` bootstraps a project, it creates:
+
+- `CLAUDE.md` - The rules (source of truth)
+- `docs/ralph-workflow.md` - Full workflow spec
+- `.cursorrules` - Pointer file for Cursor
+- `.github/copilot-instructions.md` - Pointer file for Copilot
+
+**One source of truth, works everywhere.** Your Claude Code work is compatible with Cursor users.
+
+### The Lesson System
+
+Ralph learns from mistakes:
+
+1. Task fails twice → Automatic lesson recorded
+2. You say "that's wrong" → Lesson recorded
+3. Same lesson 3+ times → Promoted to permanent rule in CLAUDE.md
+
+Lessons compound. The project gets smarter over time.
+
+## Setup
+
+### Teams Notifications (Optional)
+
+1. Create an Incoming Webhook in Teams:
+   - Channel → Manage channel → Connectors → Incoming Webhook → Configure
+   - Copy the webhook URL
+
+2. Save it:
 ```bash
-~/code/dev-tooling/scripts/new-project.sh python my-api
-~/code/dev-tooling/scripts/new-project.sh nextjs my-app
-~/code/dev-tooling/scripts/new-project.sh streamlit my-dashboard
+echo "YOUR_WEBHOOK_URL" > ~/.claude/teams-webhook-url
 ```
 
-### Set Up Teams Notifications
-
-Create `~/.claude/teams-webhook-url` with your webhook URL:
-
+3. Toggle on/off:
 ```bash
-echo "https://your-org.webhook.office.com/..." > ~/.claude/teams-webhook-url
+~/.claude/hooks/teams-toggle.sh on   # Enable
+~/.claude/hooks/teams-toggle.sh off  # Disable
+~/.claude/hooks/teams-toggle.sh      # Toggle
 ```
 
-### View Session Logs
+### View Logs
 
 ```bash
+# Session history
 cat ~/.claude/logs/sessions.log
-```
 
-### View Token Usage
-
-```bash
+# Token usage
 cat ~/.claude/logs/usage.csv
 ```
 
-## File Structure
+## Project Templates
 
-```
-~/.claude/
-├── settings.json          # Global hooks config
-├── hooks/
-│   ├── play-sound.sh
-│   ├── play-permission-sound.sh
-│   ├── play-error-sound.sh
-│   ├── desktop-notify.sh
-│   ├── notify-teams.sh
-│   ├── auto-format.sh
-│   ├── auto-lint.sh
-│   ├── auto-test.sh
-│   ├── log-session.sh
-│   ├── track-cost.sh
-│   └── protect-branch.sh
-├── commands/
-│   ├── test.md
-│   ├── lint.md
-│   ├── fmt.md
-│   ├── deploy.md
-│   └── pr.md
-├── logs/
-│   ├── sessions.log
-│   └── usage.csv
-└── teams-webhook-url
+Quickly scaffold new projects:
 
-~/code/dev-tooling/
-├── templates/
-│   ├── python/.claude/
-│   ├── nextjs/.claude/
-│   └── streamlit/.claude/
-├── scripts/
-│   └── new-project.sh
-└── README.md
+```bash
+./scripts/new-project.sh python my-api
+./scripts/new-project.sh nextjs my-app
+./scripts/new-project.sh streamlit my-dashboard
 ```
 
 ## Customization
 
-### Sound Files
-
-Set environment variables to use custom sounds:
+### Sound Files (macOS)
 
 ```bash
 export CLAUDE_DONE_SOUND="/path/to/sound.aiff"
@@ -114,12 +132,42 @@ export CLAUDE_PERMISSION_SOUND="/path/to/sound.aiff"
 export CLAUDE_ERROR_SOUND="/path/to/sound.aiff"
 ```
 
-### Disabling Hooks
+### Disable Specific Hooks
 
-Remove or comment out hooks in `~/.claude/settings.json` to disable them.
+Edit `~/.claude/settings.json` to remove or comment out hooks.
 
-### Adding New Templates
+## Uninstall
 
-1. Create a new directory under `templates/`
-2. Add `.claude/settings.json` with project-specific hooks
-3. Add `.claude/CLAUDE.md` with project instructions
+```bash
+./install/uninstall.sh
+```
+
+## File Structure
+
+```
+~/.claude/
+├── settings.json
+├── hooks/
+│   └── *.sh
+├── commands/
+│   └── *.md
+├── logs/
+│   ├── sessions.log
+│   └── usage.csv
+└── teams-webhook-url
+
+# Per-project (created by /ralph)
+your-project/
+├── CLAUDE.md              # Project rules
+├── .cursorrules           # Pointer for Cursor
+├── .github/
+│   └── copilot-instructions.md
+├── docs/
+│   ├── ralph-workflow.md  # Full workflow spec
+│   ├── prd.json           # Tasks and state
+│   ├── plan.md            # Current plan
+│   └── progress.md        # Execution log
+├── lessons/
+│   └── *.md               # Learned lessons
+└── checks.yml             # Policy gates
+```
