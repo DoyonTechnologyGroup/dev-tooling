@@ -23,7 +23,7 @@ The installer is interactive - it'll ask what you want to install.
 ./install/install.sh --all
 ```
 
-**Just the Ralph workflow** (great for Cursor users):
+**Just the Ralph workflow** (Works for Cursor And Claude Code):
 ```bash
 ./install/install.sh --ralph
 ```
