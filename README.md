@@ -9,10 +9,40 @@ git clone https://github.com/DoyonTechnologyGroup/dev-tooling.git
 cd dev-tooling && ./install/install.sh
 ```
 
-Or if you already have the repo:
+The installer is interactive - it'll ask what you want to install.
 
+### Install Options
+
+**Interactive mode** (recommended):
 ```bash
 ./install/install.sh
+```
+
+**Install everything:**
+```bash
+./install/install.sh --all
+```
+
+**Just the Ralph workflow** (great for Cursor users):
+```bash
+./install/install.sh --ralph
+```
+
+**Just hooks** (sounds, notifications, auto-format):
+```bash
+./install/install.sh --hooks
+```
+
+**Pick specific pieces:**
+```bash
+./install/install.sh --sounds         # Just sound notifications
+./install/install.sh --notifications  # Desktop + Teams notifications
+./install/install.sh --commands       # All slash commands
+```
+
+**See all options:**
+```bash
+./install/install.sh --help
 ```
 
 ## What You Get
