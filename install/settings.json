@@ -1,0 +1,87 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/play-sound.sh"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/log-session.sh"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/track-cost.sh"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/notify-teams.sh"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "permission_prompt|idle_prompt",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/play-permission-sound.sh"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/desktop-notify.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/auto-format.sh"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/auto-lint.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/auto-test.sh",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/play-error-sound.sh"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/protect-branch.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
