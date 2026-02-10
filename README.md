@@ -142,6 +142,10 @@ cat ~/.claude/logs/sessions.log
 cat ~/.claude/logs/usage.csv
 ```
 
+## Documentation
+
+- **[Azure Container Apps setup guide](docs/azure-container-apps-setup-guide.md)** — Reusable steps to deploy a new app to Azure Container Apps with GitHub Actions, plus an [IT request template](docs/templates/it-request-azure-container-app.md) to send to IT for app registration and role assignments.
+
 ## Project Templates
 
 Quickly scaffold new projects:
